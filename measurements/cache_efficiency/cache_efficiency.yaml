@@ -1,0 +1,19 @@
+programs:
+  - executeable: ./bin/TestingAlgorithms
+    args: [ "cache_hits_iter", "-i", "10000"]
+    input: ""
+  - executeable: ./bin/TestingAlgorithms
+    args: [ "chase", "-i", "1000000000", "--size", "32768" ] # 32 KB
+    input: ""
+  - executeable: ./bin/TestingAlgorithms
+    args: [ "chase", "-i", "1000000000", "--size", "524288" ] # 512 KB
+    input: ""
+  - executeable: ./bin/TestingAlgorithms
+    args: [ "chase", "-i", "1000000000", "--size", "4194304" ] # 4 MB
+    input: ""
+  - executeable: ./bin/TestingAlgorithms
+    args: [ "chase", "-i", "100000000", "--size", "33554432" ] # 32 MB
+    input: ""
+  - executeable: ./bin/TestingAlgorithms
+    args: [ "chase", "-i", "100000000", "--size", "268435456" ] # 256 MB
+    input: ""

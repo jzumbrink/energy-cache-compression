@@ -1,0 +1,10 @@
+programs:
+  - executeable: ./bin/move-r-locate
+    args: [ "tmp/einstein.move-r", "/home/jan/patterns/einstein_20000_8.patt" ]
+    input: ""
+  - executeable: ./bin/move-r-locate
+    args: [ "tmp/einstein_lzendsa.move-r", "/home/jan/patterns/einstein_20000_8.patt" ]
+    input: ""
+  - executeable: ./bin/move-r-locate
+    args: [ "tmp/einstein_rlzsa.move-r", "/home/jan/patterns/einstein_20000_8.patt" ]
+    input: ""
