@@ -105,6 +105,8 @@ st.write("If we take a look at figure 1, we can clearly see, as expected, that a
          "This stems from the fact that if we have few data allocated, then the data can be stored in the L1/2/3 cache or even in the CPU register and can be accessed fast. "
          "As we increase the amount of memory allocated, the data have to be stored more and more in the L2 and L3 cache or even in the main memory, which leads to slower access times. ")
 
+row_bar_charts = st.columns(2)
+
 st.write("The energy usage per access in nano-joules is visualized in figure 2. From the first look, this looks relatively similar to the chart shown in figure 1. "
          "It's undeniably true that higher access times consequently result in higher energy usage. "
          "But if we take a closer look, we can see another pattern. "
@@ -116,7 +118,6 @@ st.write("The energy per time ratio is the highest with {:.2f} J/s if we only ac
          "If we look at instances where the values are not in the registers but mostly in the L1 cache, we already see an energy-to-time ratio of {:.2f} for 32 KB of allocated data. ".format(measured_data["32KB"]["eng_per_second"]) +
          "This energy per time ratio is still about {:.2f}% higher than the ratio if we allocate 256 MB.".format(100 * (measured_data["32KB"]["eng_per_second"] - measured_data["256MB"]["eng_per_second"]) / measured_data["256MB"]["eng_per_second"]))
 
-row_bar_charts = st.columns(2)
 middle_bar_chart = st.columns([1, 2, 1])
 
 st.write("## Conclusions")
@@ -126,7 +127,7 @@ st.write("The experiments clearly show that runtime is not a reliable proxy for 
          "So, it might be worth it to look at cache-inefficient algorithms that are only a little bit slower (or even similarly fast) than more cache-efficient alternatives and use them if one wants to enhance energy-efficiency. ")
 
 st.write("## Further reading")
-#todo st.page_link("pages/2_Compressed_Text_Indices.py", label="Compressed Text Indices: Using Cache Misses for Energy-Efficiency")
+st.page_link("pages/2_Compressed_Text_Indices.py", label="Compressed Text Indices: Using Cache Misses for Energy-Efficiency")
 
 st.divider()
 st.write(references.make_references_section())

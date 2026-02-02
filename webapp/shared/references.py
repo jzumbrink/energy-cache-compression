@@ -20,31 +20,48 @@ class References:
             article_journal = entry.get("journal", "")
             volume = entry.get("volume", "")
             number = entry.get("number", "")
+            how_published = entry.get("howpublished", "")
+            note = entry.get("note", "")
 
             if entry['ENTRYTYPE'] == "inproceedings":
                 self.references_str[entry['ID']] = \
                     f"{authors}. {title}. In: {book_title}, pp. {pages} ({year}). [{doi}]({doi})"
             elif entry['ENTRYTYPE'] == "article":
                 self.references_str[entry['ID']] = f"{authors}. {title}. {article_journal}, vol. {volume}, no. {number}, pp. {pages} ({year}). [{doi}]({doi})"
+            elif entry['ENTRYTYPE'] == "misc":
+                self.references_str[entry['ID']] = f"{authors}. {title} ({year}). {note}. [{how_published}]({how_published})"
 
-        self.references_nr: dict[str, None | int] = {bib_id: None for bib_id in self.references_str.keys()}
-        self.max_ref_nr = 1
+        # citations
+        self.citations_nr: dict[str, None | int] = {bib_id: None for bib_id in self.references_str.keys()}
+        self.max_cite_nr = 1
+
+        # referencing to citations
+        # figures are in the order they are referenced
+        self.figures_nr: dict[str, None | int] = {}
+        self.max_figure_nr = 1
 
     def cite(self, *bib_ids) -> str:
         ref_numbers = []
         for bib_id in bib_ids:
-            if self.references_nr[bib_id] is None:
-                self.references_nr[bib_id] = self.max_ref_nr
-                self.max_ref_nr += 1
-            ref_numbers.append(self.references_nr[bib_id])
+            if self.citations_nr[bib_id] is None:
+                self.citations_nr[bib_id] = self.max_cite_nr
+                self.max_cite_nr += 1
+            ref_numbers.append(self.citations_nr[bib_id])
 
         ref_numbers.sort()
 
         return f"[{", ".join(list(map(str, ref_numbers)))}]"
 
+    def ref_figure(self, label: str) -> int:
+        if label not in self.figures_nr:
+            self.figures_nr[label] = self.max_figure_nr
+            self.max_figure_nr += 1
+
+        return self.figures_nr[label]
+
     def make_references_section(self) -> str:
         ref_section = "## References"
-        ref_items = [(bib_id, ref_nr) for bib_id, ref_nr in self.references_nr.items() if ref_nr is not None]
+        ref_items = [(bib_id, ref_nr) for bib_id, ref_nr in self.citations_nr.items() if ref_nr is not None]
         ref_items.sort(key=lambda item: item[1])
         for bib_id, ref_nr in ref_items:
             ref_section += "\n\n[{}] {}".format(ref_nr, self.references_str[bib_id])

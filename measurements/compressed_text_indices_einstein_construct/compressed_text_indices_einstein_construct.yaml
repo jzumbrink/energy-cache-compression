@@ -1,0 +1,10 @@
+programs:
+  - executeable: ./bin/move-r-build
+    args: [ "-s", "locate_move", "-o", "tmp/b_einstein", "-p", "1", "/home/jan/compression-texts/einstein" ]
+    input: ""
+  - executeable: ./bin/move-r-build
+    args: [ "-s", "locate_lzendsa", "-o", "tmp/b_einstein", "-p", "1", "/home/jan/compression-texts/einstein" ]
+    input: ""
+  - executeable: ./bin/move-r-build
+    args: [ "-s", "locate_rlzsa", "-o", "tmp/b_einstein", "-p", "1", "/home/jan/compression-texts/einstein" ]
+    input: ""

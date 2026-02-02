@@ -1,0 +1,176 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+import streamlit as st
+import plotly.express as px
+
+import shared.streamlit_utils as su
+from shared.references import References
+from shared.common_text import EXPERIMENT_SYSTEM_TEXT
+import energy_efficient_algorithms.compression_emissions as compr
+
+references = References()
+
+PAGE_TITLE = "Compressed Text Indices: Using Cache Misses for Energy-Efficiency"
+
+su.c_set_page_config(PAGE_TITLE)
+
+st.title(PAGE_TITLE)
+
+st.write("Compressing large texts or large data has been an important issue for a long time. "
+         "Compression in itself can be energy-efficient because it can arrange data in a more succinct manner and therefore save energy when storing or transferring such data. "
+         "But another aspect is the decompression part. If the decompression takes too much energy, then we may have an issue. "
+         "In general, there is always a conflict, higher compression ratio tends to infer that the decompression part takes more energy. "
+         "This relationship does not hold for some compression tools, but is mostly true, trivially, if we compare uncompressed data with highly compressed data.")
+
+st.write("We want to take a closer look at compressed text indices. "
+         "These are indices that support the following queries with the text in compressed form:")
+st.write("- *count*: counting how many times a pattern occurs in the text.")
+st.write("- *locate*: enumeration of all the occurrences of a pattern in the text.")
+
+st.write("We want to investigate the energy-efficiency of locate queries using three different compressed text indices.")
+
+st.write(f"- `move-r`: "
+         f"A compressed text index based on the run-length encoding of the Burrows-Wheeler-Transform {references.cite('move-r')}. "
+         f"Improvement of the r-index by using the move data structure {references.cite('r-index', 'move')}. "
+         f"It achieves high locate performance in comparison to the r-index and most other contemporary compressed text indices. ")
+st.write(f"- `move-r-lzend`: Based on the move-r index, it replaces the locate function of move-r {references.cite('move-r-lzend-rlz')}. "
+         f"Instead, it answers locate queries by compressing the differential suffix array with LZ-End {references.cite('lzend')}. "
+         f"The idea is to improve the locate performance of the move-r index. It comes with the cost of a worse compression ratio.")
+st.write(f"- `move-r-rlz`: Replaces the locate function of move-r with the RLZ-compressed differential suffix array {references.cite('move-r-lzend-rlz', 'rlz')}. "
+         f"Similar to move-r-lzend. ")
+
+### Experiment section
+st.write(f"## Experiments\n{EXPERIMENT_SYSTEM_TEXT} "
+         f"For our measurements, we used the implementations of Dinklage et al. {references.cite('move-r-lzend-rlz')}. "
+         f"They can be found [here](https://github.com/LukasNalbach/Move-r).")
+
+st.write(f"WRITE AND REF TO FIGURE {references.ref_figure('loc_all')}.")
+
+st.image("webapp/static/compressed_text_indices_einstein_8.png", caption=f"Figure {references.ref_figure('loc_all')}: results for 20,000 locate queries on the text `einstein` with patterns of the length 8. "
+                                                                  "There was an average of 63,761 occurrences per pattern.")
+
+st.write(f"WRITE AND REF TO FIGURE {references.ref_figure('loc_eng_per_time')}.")
+
+row_2 = st.columns([1, 2, 1])
+
+st.write(f"WRITE AND REF TO FIGURE {references.ref_figure('size')}.")
+
+row_3 = st.columns([1, 2, 1])
+
+st.write(f"WRITE AND REF TO FIGURE {references.ref_figure('size_time')}, {references.ref_figure('size_eng')}.")
+
+row_4 = st.columns(2)
+
+st.write("### Construction costs")
+st.write("But what about the construction of these indices? This, of course, consumes energy too. "
+         f"As you can see in Figure {references.ref_figure('cst_all')}.")
+
+st.image("webapp/static/compressed_text_indices_einstein_construct.png", caption=f"Figure {references.ref_figure('cst_all')}")
+
+st.write(f"WRITE AND REF TO FIGURE {references.ref_figure('cst_eng_per_time')}, {references.ref_figure('cmb')}.")
+
+row_construction = st.columns(2)
+
+st.write("## Conclusions")
+
+st.write("## Further reading")
+st.page_link("pages/3_Emissions_and_Compression.py", label="Emissions and Compression")
+
+st.divider()
+st.write(references.make_references_section())
+
+# run-time heavy loading at the end
+used_algos = ["move-r", "move-r-lzend", "move-r-rlz"]
+with row_2[1]:
+    fig = px.bar(
+        x=used_algos,
+        y=[compr.measured_locate_data["einstein"]["8"]["eng"][algo] / compr.measured_locate_data["einstein"]["8"]["time"][algo] for algo in used_algos],
+        height=500,
+        labels={
+            "x": "Algorithm - locate",
+            "y": "Energy per time [J/s]"
+        }
+    )
+
+    st.plotly_chart(fig, width='content')
+    st.caption(f"Figure {references.ref_figure('loc_eng_per_time')}")
+
+with row_3[1]:
+    fig = px.bar(
+        x=used_algos,
+        y=[compr.idx_sizes["einstein"][algo] for algo in used_algos],
+        height=500,
+        labels={
+            "x": "Algorithm - locate",
+            "y": "Size of the compressed text index [MB]"
+        }
+    )
+
+    st.plotly_chart(fig, width='content')
+    st.caption(f"Figure {references.ref_figure('size')}: The original file has a size of {compr.file_sizes['einstein']} MB.")
+
+for y, y_label, i, y_lim_max, fig_label in zip([[compr.measured_locate_data["einstein"]["8"]["time"][algo] for algo in used_algos],
+                            [compr.measured_locate_data["einstein"]["8"]["eng"][algo] for algo in used_algos]],
+                            ["Runtime [s]", "Energy [J]"],
+                            [0, 1],
+                            [20, 200],
+                            ['size_time', 'size_eng']):
+    with row_4[i]:
+        fig, ax = plt.subplots()
+
+        x = [compr.idx_sizes["einstein"][algo] for algo in used_algos]
+
+        ax.scatter(x[0], y[0], s=120, color="#009E73", marker="s")
+        ax.scatter(x[1], y[1], s=120, color="#0072B2", marker="^")
+        ax.scatter(x[2], y[2], s=120, color="#E69F00", marker="o")
+
+        ax.set_xlim(0, 60)
+        ax.set_ylim(0, y_lim_max)
+
+        ax.grid(False)
+
+        ax.set_xlabel("Size of compressed text index [MB]")
+        ax.set_ylabel(y_label)
+
+        for j, offset in enumerate([(-35, 12), (-15, -22), (-25, 10)]):
+            ax.annotate(used_algos[j], (x[j], y[j]), xytext=offset, textcoords="offset points", fontsize=12)
+
+        st.pyplot(fig)
+        st.caption(f"Figure {references.ref_figure(fig_label)}")
+
+with row_construction[0]:
+    fig = px.bar(
+        x=used_algos,
+        y=[compr.measured_build_data["einstein"]["eng"][algo] / compr.measured_build_data["einstein"]["time"][algo] for algo in used_algos],
+        height=500,
+        labels={
+            "x": "Algorithm - Build",
+            "y": "Energy per time [J/s]"
+        }
+    )
+
+    st.plotly_chart(fig, width='content')
+    st.caption(f"Figure {references.ref_figure('cst_eng_per_time')}")
+
+with row_construction[1]:
+    log_scale = st.toggle("Logarithmic scale", value=True)
+
+    coordinates = [2_000 * i for i in range(1, 1000)]
+
+    energy_usage_series = [pd.Series(
+        [compr.measured_build_data["einstein"]["eng"][key] + (compr.measured_locate_data["einstein"]["8"]["eng"][key] / 20_000) * c for c in coordinates],
+        index=coordinates,
+        name=key
+    ) for key in used_algos]
+
+    fig, ax = plt.subplots()
+
+    for series, color in zip(energy_usage_series, ["#009E73", "#0072B2", "#E69F00"]):
+        series.plot(ax=ax, marker=None, color=color, logy=log_scale, logx=log_scale)
+
+    ax.set_xlabel("Queries")
+    ax.set_ylabel("Energy usage locate queries + build [J]")
+    ax.legend()
+
+    st.pyplot(fig)
+    st.caption(f"Figure {references.ref_figure('cmb')}")
