@@ -2,7 +2,7 @@ import bibtexparser
 
 class References:
 
-    def __init__(self, references_filename="static/references.bib"):
+    def __init__(self, references_filename="webapp/static/references.bib"):
         with open(references_filename, "r") as references_bib_file:
             bibtex_str = references_bib_file.read()
 
