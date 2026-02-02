@@ -126,7 +126,7 @@ st.write("The experiments clearly show that runtime is not a reliable proxy for 
          "So, it might be worth it to look at cache-inefficient algorithms that are only a little bit slower (or even similarly fast) than more cache-efficient alternatives and use them if one wants to enhance energy-efficiency. ")
 
 st.write("## Further reading")
-st.page_link("pages/2_Compressed_Text_Indices.py", label="Compressed Text Indices: Using Cache Misses for Energy-Efficiency")
+#todo st.page_link("pages/2_Compressed_Text_Indices.py", label="Compressed Text Indices: Using Cache Misses for Energy-Efficiency")
 
 st.divider()
 st.write(references.make_references_section())
