@@ -9,7 +9,7 @@ def c_set_page_config(page_title="Energy Efficient Algorithms"):
         page_title=page_title,
         page_icon="⚡")
 
-def create_compressed_text_idx_plot(compressed_text_idx, filename, indices=tuple([10**(i+2) for i in range(11)])):
+"""def create_compressed_text_idx_plot(compressed_text_idx, filename, indices=tuple([10**(i+2) for i in range(11)])):
     disk_emissions = disk_co2_emissions(idx_sizes[filename][compressed_text_idx])
     query_emissions = [query_co2_emissions(c, query_energy_usage[filename][compressed_text_idx]) for c in indices]
 
@@ -40,4 +40,4 @@ def create_compressed_text_idx_plot(compressed_text_idx, filename, indices=tuple
     ax.set_ylabel("CO2 eq [g]")
     ax.legend()
 
-    return fig
+    return fig"""
