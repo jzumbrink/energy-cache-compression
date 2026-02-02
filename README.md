@@ -1,7 +1,7 @@
 On the energy-efficiency of Cache Misses
 ====
 
-A description of the project and all the findings can be found under [https://energy-efficiency-cache-misses.streamlit.app](https://energy-efficiency-cache-misses.streamlit.app).
+A description of the project and all the findings can be found under [https://energy-cache-compression.streamlit.app/](https://energy-cache-compression.streamlit.app/).
 
 # Installation & Setup
 In the following it is described how to reproduce the results, execute the programs described in the measurements 
