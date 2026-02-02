@@ -111,7 +111,7 @@ with all_emissions_tabs[0]:
     emission_series = [pd.Series(
         [compr.all_co2_emissions(
             compr.idx_sizes["einstein"][key],
-            compr.measured_build_data["einstein"]["eng"][key],
+            compr.measured_construction_data["einstein"]["eng"][key],
             compr.measured_locate_data["einstein"]["8"]["eng"][key] / compr.measured_locate_data["einstein"]["8"]["iter"],
             c
         ) for c in coordinates],
@@ -142,7 +142,7 @@ for i, algo in enumerate(used_algos):
         coordinates = [200_000 * i for i in range(1, 1000)]
 
         em_storage = [compr.disk_co2_emissions(compr.idx_sizes["einstein"][algo]) for _ in coordinates]
-        em_construction = [compr.joule_to_co2(compr.measured_build_data["einstein"]["eng"][algo]) for _ in coordinates]
+        em_construction = [compr.joule_to_co2(compr.measured_construction_data["einstein"]["eng"][algo]) for _ in coordinates]
         em_query = [compr.joule_to_co2((compr.measured_locate_data["einstein"]["8"]["eng"][algo] / compr.measured_locate_data["einstein"]["8"]["iter"]) * c) for c in coordinates]
 
         size_series = pd.Series(

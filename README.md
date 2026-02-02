@@ -10,6 +10,6 @@ or run the web page (*Todo: explain in detail*).
 - Download energy-toolkit
 - Build Sorting and TestingAlgorithms
 - Build move-r cli
-- Get einstein file, generate einstein pattern file
+- Decompress `texts.7z` and `patterns.7z`
 - Execute command sudo energy-toolkit ....
 
