@@ -44,10 +44,10 @@ st.write(f"- `move-r-rlz`: Replaces the locate function of move-r with the RLZ-c
 st.write(f"## Experiments\n{EXPERIMENT_SYSTEM_TEXT} "
          f"For our measurements, we used the implementations of Dinklage et al. {references.cite('move-r-lzend-rlz')}. "
          f"They can be found [here](https://github.com/LukasNalbach/Move-r). "
-         f"We run our tests on the file `einstein`, a file consisting of different version of wikipedia articles about einstein concatenated together. "
+         f"We run our tests on the file `einstein`, a file consisting of different versions of Wikipedia articles about Einstein concatenated together. "
          f"Because of the repetitive nature of the einstein file, it is very suitable for compression.")
 
-st.write(f"First, we measured the average runtime and energy usage of 20,000 locate queries with random patterns of the length 8, "
+st.write(f"First, we measured the average runtime and energy usage of 20,000 locate queries with random patterns of length 8; "
          f"the results can be found in figure {references.ref_figure('loc_all')}. "
          f"Clearly, move-r-rlz is the fastest index for locate queries and it also consumes the least energy. "
          f"The move-r and move-r-lzend index are much more similar matched. " +
@@ -59,11 +59,11 @@ st.image("webapp/static/compressed_text_indices_einstein_8.png", caption=f"Figur
 eng_to_time_move_r = compr.measured_locate_data["einstein"]["8"]["eng"]["move-r"] / compr.measured_locate_data["einstein"]["8"]["time"]["move-r"]
 eng_to_time_move_r_rlz = compr.measured_locate_data["einstein"]["8"]["eng"]["move-r-rlz"] / compr.measured_locate_data["einstein"]["8"]["time"]["move-r-rlz"]
 st.write(f"To find out why this is the case, we change the representation of our data a bit. "
-         f"The figure {references.ref_figure('loc_eng_per_time')} shows now the energy that is consumed per time. "
+         f"Figure {references.ref_figure('loc_eng_per_time')} shows now the energy that is consumed per time. "
          f"We no longer look at the absolute energy of a program, but rather their ratio of energy per runtime. " +
-         "Now we get a different picture, relative to a time interval move-r-rlz consumes the most energy. About {:.2f}% more than move-r. ".format(100 * (eng_to_time_move_r_rlz - eng_to_time_move_r) / eng_to_time_move_r) +
-         "This most probably stems from the fact, that move-r-rlz is much more cache efficient than move-r and move-r-lzend. "
-         "As we learned on the previous page, cache efficient programs tend to consume more energy per time interval. ")
+         "Now we get a different picture: relative to a time interval move-r-rlz consumes the most energy. About {:.2f}% more than move-r. ".format(100 * (eng_to_time_move_r_rlz - eng_to_time_move_r) / eng_to_time_move_r) +
+         "This most probably stems from the fact that move-r-rlz is much more cache efficient than move-r and move-r-lzend. "
+         "As we learned on the previous page, cache-efficient programs tend to consume more energy per time interval. ")
 
 row_2 = st.columns([1, 2, 1])
 
@@ -86,26 +86,26 @@ row_4 = st.columns(2)
 
 st.write("### Construction costs")
 st.write("But what about the construction of these indices? This, of course, consumes energy too. "
-         f"As you can see in Figure {references.ref_figure('cst_all')}. the construction of move-r-lzend consumes the most energy and takes the most time by a big margin. "
-         f"Move-r and move-r-rlz are relatively close to another.")
+         f"As you can see in Figure {references.ref_figure('cst_all')}, the construction of move-r-lzend consumes the most energy and takes the most time by a big margin. "
+         f"Move-r and move-r-rlz are relatively close to one another.")
 
 st.image("webapp/static/compressed_text_indices_einstein_construct.png", caption=f"Figure {references.ref_figure('cst_all')}")
 
 st.write("### Adding construction and query costs together")
 
 st.write("Let's take a look at the combination of construction costs and costs for locate queries. "
-         f"The energy usage, dependent on the amount of locate queries executed, is visualized in figure {references.ref_figure('cmb')}. "
-         f"If one executes up to approximately 20,000 locate queries, then the construction costs outweigh and move-r is the most energy-efficient choice. "
+         f"The energy usage, dependent on the number of locate queries executed, is visualized in figure {references.ref_figure('cmb')}. "
+         f"If one executes up to approximately 20,000 locate queries, then the construction costs outweigh, and move-r is the most energy-efficient choice. "
          f"For more queries, move-r-rlz becomes the most energy-efficient index. "
-         f"Note, that we excluded the compression ratio in this figure again, these three factors will be merged on the following page.")
+         f"Note that we excluded the compression ratio in this figure again. These three factors will be merged on the following page.")
 
 row_construction = st.columns([1,2,1])
 
 st.write("## Conclusions")
 
 st.write("The results from the previous chapter were helpful to understand the difference in energy per time interval ratios across algorithms for the same purpose. "
-         "This even helped to find situations were algorithms were pareto-optimal if one minimizes runtime, but become dominated if one minimizes energy consumption. "
-         "Which shows that runtime is also in the praxis insufficient to be a proxy for energy-consumption.")
+         "This even helped to find situations where algorithms were pareto-optimal if one minimizes runtime but become dominated if one minimizes energy consumption. "
+         "Which shows that runtime is also, in practice, insufficient to be a proxy for energy consumption.")
 
 st.write("## Further reading")
 st.page_link("pages/3_Emissions_and_Compression.py", label="Emissions and Compression")

@@ -14,6 +14,13 @@ PAGE_TITLE = "Emissions and Compression"
 
 su.c_set_page_config(PAGE_TITLE)
 
+CO2 = "$\\text{CO}_2$"
+CO2_EQ = "$\\text{CO}_2 \\, \\text{eq}$"
+CO2_EQ_INL = "\\text{CO}_2 \\, \\text{eq}"
+GRAM = "\\text{g}"
+KGRAM = "\\text{kg}"
+KMETER = "\\text{km}"
+
 st.title(PAGE_TITLE)
 
 st.write("We talk about compressed text indices as they were introduced on the previous page. "
@@ -21,46 +28,47 @@ st.write("We talk about compressed text indices as they were introduced on the p
 
 st.page_link("pages/2_Compressed_Text_Indices.py", label="Compressed Text Indices")
 
-st.write("When we talk about how many emissions are emitted from using compression algorithms we must first define our scope. "
+st.write("When we talk about how many emissions are emitted from using compression algorithms, we must first define our scope. "
          "We will talk about the emissions generated when:")
 st.write("1. Constructing the compressed text index.")
 st.write("2. Decompressing parts of the compressed data. In our case, this means running locate-queries on the indices.")
 st.write("3. Storing the compressed text index, i.e., the disk space that is occupied.")
 
-st.write("For the first two points we already very far in measuring them. "
-         "With the measured energy consumption of construction and of locate queries, we must only convert this into CO2 equivalent emissions. "
-         f"For this, we take the average CO2 emissions for a Kilowatthour in germany; which was 363 g in 2024 {references.cite('strommix')}. "
-         f"One Kilowatthour entspricht 3600 Kilojoule. "
-         f"So , the CO2 emissions per Kilojoule are")
-st.write("$$\\frac{363\\, \\text{g} \\, \\text{CO}_2}{3600 \\,\\text{kJ}} \\approx 0.101 \\, \\text{g CO}_2 \\, \\text{per kJ}.$$")
-st.write("Now, we can successfully calculate the $\\text{CO}_2$ emissions for the construction and the queries. "
-         "Note, that the real CO2 emissions can vary greatly depending on time of the day or the location.")
+st.write("For the first two points, we are already very far in measuring them. "
+         f"With the measured energy consumption of construction and of locate queries, we must only convert this into {CO2} equivalent emissions. "
+         f"For this, we take the average {CO2_EQ} emissions for a kilowatt hour in Germany; which was $363\\, {GRAM}$ in 2024 {references.cite('strommix')}. "
+         f"One kilowatt hour is equivalent to 3600 kilojoules. "
+         f"So, the {CO2_EQ} emissions per kilojoule are")
+st.write("$$\\frac{363\\, \\text{g} \\, \\text{CO}_2\\,\\text{eq.}}{3600 \\,\\text{kJ}} \\approx 0.101 \\, \\text{g CO}_2\\,\\text{eq.} / \\text{kJ}.$$")
+st.write(f"Now, we can successfully calculate the {CO2_EQ} emissions for the construction and the queries. "
+         f"Note that the real {CO2_EQ} emissions can vary greatly depending on the time of day or the location.")
 
 st.write("Coming up with a number for our third point, the emissions generated because of the occupied disk space, is a bit more tricky. "
          "And it's even more dependent on the individual situation. "
-         "If one already has a disk and has enough space left, then one could argue, that there near to none emissions are generated. "
-         "But if we apply this to all our files and data, we sure all would need bigger hard drives, so this is to short-thinked. "
-         "We make the simplification to assume that the data is stored in a online storage. "
+         "If one already has a disk and has enough space left, then one could argue that there are nearly no emissions generated. "
+         "But if we apply this to all our files and data, we surely all would need bigger hard drives, so this is too short-sighted. "
+         "We make the simplification to assume that the data is stored in an online storage. "
          "In times of massive data centers and a shift to store all things in a cloud, this may not be so far-fetched. "
-         f"A Bericht from the Umweltbundesamt concluded that that 166-280 k CO2 eq. are emitted for storing a TB of "
-         f"data for a year in an Online-Storage {references.cite('gcc')}. "
-         f"We take the average of their values and proceed with a value of 209.5 kg CO2 eq. per TB and year.")
+         f"A report from the German Environment Agency concluded that that $166-280 \\,{KGRAM}\\, {CO2_EQ_INL}$ are emitted for storing a TB of "
+         f"data for a year in an online storage {references.cite('gcc')}. "
+         f"We take the average of their values and proceed with a value of $209.5 \\,{KGRAM}\\, {CO2_EQ_INL}$ per TB and year.")
 
 st.write(f"## Experiments\n{EXPERIMENT_SYSTEM_TEXT}")
 
 st.write(f"The computed emissions for our three indices are shown in figure {references.ref_figure('em_size')}. "
-         f"It is no surprise that the storage of the move-r-rlz index emits twice as much CO2 eq as the move-r index, "
+         f"It is no surprise that the storage of the move-r-rlz index emits twice as much {CO2_EQ} as the move-r index, "
          f"as the emissions are strictly linear to the compressed index size. "
-         f"They are approximately in the range of 5-10 g CO2 eq per year, which is fairly small and less then a petrol car emits when traveling 0.1 km {references.cite('car_em')}. "
+         f"They are approximately in the range of $5-10\\, {GRAM}\\, {CO2_EQ_INL}$ per year, which is fairly small and less than a petrol car emits when traveling $0.1 \\,{KMETER}$ {references.cite('car_em')}. "
          f"But these emissions can still be significant if one has vastly bigger data to compress and store.")
 
 uncompressed_file_disk_emissions = compr.disk_co2_emissions(compr.file_sizes['einstein'])
 disk_emissions_move_r = compr.disk_co2_emissions(compr.idx_sizes['einstein']['move-r'])
 disk_emissions_move_r_rlz = compr.disk_co2_emissions(compr.idx_sizes['einstein']['move-r-rlz'])
-st.write("The uncompressed file would emit {:.2f} g of CO2 eq per year. ".format(uncompressed_file_disk_emissions) +
-         "Thus choosing a compressed representation would save from {:.2f}% up to {:.2f}% of CO2 eq emissions for storage.".format(
+st.write("The uncompressed file would emit ${:.2f} \\,{}\\, {}$ per year. ".format(uncompressed_file_disk_emissions, GRAM, CO2_EQ_INL) +
+         "Thus, choosing a compressed representation would save from {:.2f}% up to {:.2f}% of {} emissions for storage.".format(
              (uncompressed_file_disk_emissions - disk_emissions_move_r_rlz) / uncompressed_file_disk_emissions * 100,
-             (uncompressed_file_disk_emissions - disk_emissions_move_r) / uncompressed_file_disk_emissions * 100
+             (uncompressed_file_disk_emissions - disk_emissions_move_r) / uncompressed_file_disk_emissions * 100,
+             CO2_EQ
          ))
 
 emissions_variant_row = st.columns([1, 2, 1])
@@ -68,11 +76,11 @@ emissions_variant_row = st.columns([1, 2, 1])
 st.write("Now, we can add the emissions from the storage to the emissions from the construction and the queries. "
          f"The total emissions per year and per query amount can be seen in figure {references.ref_figure('cmb')}. "
          f"It is apparent that the emissions for the construction of a compressed text index combined with the reduced "
-         f"storage emissions, are drastically lower than to store the uncompressed file directly. "
+         f"storage emissions are drastically lower than to store the uncompressed file directly. "
          f"If one plans to execute less than 5 million locate queries, then the move-r or move-r-lzend index would be the best choice to reduce emissions. "
-         f"Furthermore, move-r emits less than move-r-lzend for every halway reasonable amount of queries, " +
+         f"Furthermore, move-r emits less than move-r-lzend for every reasonable large amount of queries, " +
          "even though move-r is about {:.2f}% slower than move-r-lzend. ".format(100 * (compr.measured_locate_data['einstein']['8']['time']['move-r'] - compr.measured_locate_data['einstein']['8']['time']['move-r-lzend']) / compr.measured_locate_data['einstein']['8']['time']['move-r']) +
-         f"Move-r-rlz emits the least amount of CO2 eq. when the amount of queries exceeds 7 million.")
+         f"Move-r-rlz emits the least amount of {CO2_EQ} when the amount of queries exceeds 7 million.")
 
 emissions_all_row = st.columns([1, 2, 1])
 
@@ -92,7 +100,7 @@ with emissions_variant_row[1]:
         height=500,
         labels={
             "x": "Emissions for the storage of the compressed text indices",
-            "y": "CO2 eq. per year [g/y]"
+            "y": f"CO2 eq. per year [g/y]"
         }
     )
 
@@ -128,7 +136,7 @@ with all_emissions_tabs[0]:
     uncompressed_series.plot(ax=ax, marker="o", color="black", logy=log_scale, logx=log_scale)
 
     ax.set_xlabel("Queries")
-    ax.set_ylabel("CO2 eq per year and queries [g]")
+    ax.set_ylabel(f"{CO2_EQ} per year and queries [g]")
     ax.legend()
 
     st.pyplot(fig)
@@ -175,7 +183,7 @@ for i, algo in enumerate(used_algos):
             series.plot(ax=ax, marker=None, color=color, logy=log_scales[i], logx=log_scales[i])
 
         ax.set_xlabel("Queries")
-        ax.set_ylabel("CO2 eq per year and queries [g]")
+        ax.set_ylabel(f"{CO2_EQ} per year and queries [g]")
         ax.legend()
 
         st.pyplot(fig)
