@@ -4,3 +4,4 @@ numpy==2.4.1
 pandas==2.3.3
 plotly==6.5.2
 referencing==0.37.0
+streamlit==1.53.1
