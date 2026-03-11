@@ -103,7 +103,7 @@ st.write(f"## Experiments\n{EXPERIMENT_SYSTEM_TEXT}"
 
 st.write("If we take a look at figure 1, we can clearly see, as expected, that a memory access takes longer if more data was allocated. "
          "This stems from the fact that if we have few data allocated, then the data can be stored in the L1/2/3 cache or even in the CPU register and can be accessed fast. "
-         "As we increase the amount of memory allocated, the data have to be stored more and more in the L2 and L3 cache or even in the main memory, which leads to slower access times. ")
+         "As we increase the amount of memory allocated, the data has to be stored more and more in the L2 and L3 cache or even in the main memory, which leads to slower access times. ")
 
 row_bar_charts = st.columns(2)
 
@@ -115,7 +115,7 @@ st.write("The energy usage per access in nano-joules is visualized in figure 2. 
 
 st.write("The energy per time ratio is the highest with {:.2f} J/s if we only access values in the CPU register. ".format(measured_data["reg"]["eng_per_second"]) +
          "This is about {:.2f}% higher than the energy per time ratio if we allocate 256 MB of data. ".format(100 * (measured_data["reg"]["eng_per_second"] - measured_data["256MB"]["eng_per_second"]) / measured_data["256MB"]["eng_per_second"]) +
-         "If we look at instances where the values are not in the registers but mostly in the L1 cache, we already see an energy-to-time ratio of {:.2f} for 32 KB of allocated data. ".format(measured_data["32KB"]["eng_per_second"]) +
+         "If we look at instances where the values are not in the registers but mostly in the L1 cache, we already see an energy-to-time ratio of {:.2f} J/s for 32 KB of allocated data. ".format(measured_data["32KB"]["eng_per_second"]) +
          "This energy per time ratio is still about {:.2f}% higher than the ratio if we allocate 256 MB.".format(100 * (measured_data["32KB"]["eng_per_second"] - measured_data["256MB"]["eng_per_second"]) / measured_data["256MB"]["eng_per_second"]))
 
 middle_bar_chart = st.columns([1, 2, 1])
@@ -145,7 +145,7 @@ with row_bar_charts[0]:
     )
 
     st.plotly_chart(fig, width='content')
-    st.caption("Figure 1: TODO.")
+    st.caption("Figure 1")
 
 with row_bar_charts[1]:
     fig = px.bar(
@@ -159,7 +159,7 @@ with row_bar_charts[1]:
     )
 
     st.plotly_chart(fig, width='content')
-    st.caption("Figure 2: TODO.")
+    st.caption("Figure 2")
 
 with middle_bar_chart[1]:
     fig = px.bar(
